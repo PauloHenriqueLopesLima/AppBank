@@ -8,7 +8,7 @@
     tools:context=".LoginActivity">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/login_button"
         android:layout_width="202dp"
         android:layout_height="62dp"
         android:layout_marginBottom="42dp"
@@ -24,23 +24,23 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
-        android:id="@+id/textView"
+        android:id="@+id/imageView"
         android:layout_width="125dp"
         android:layout_height="70dp"
         android:layout_marginStart="174dp"
         android:layout_marginTop="56dp"
         android:layout_marginEnd="178dp"
-        android:src="@drawable/logo"
+        android:contentDescription="@string/todo"
         android:gravity="center"
 
+        android:src="@drawable/logo"
         android:text="@string/bank"
         android:textColor="@color/colorPrimary"
         android:textSize="45sp"
         app:layout_constraintCircleRadius="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/todo" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
@@ -49,14 +49,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintTop_toBottomOf="@+id/imageView">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/user_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="User"
-            android:inputType="textWebEmailAddress"
 
+            android:inputType="textWebEmailAddress"
             tools:ignore="HardcodedText" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -72,10 +73,11 @@
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/user_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
-            android:inputType="number"
+            android:inputType="text"
             tools:ignore="HardcodedText" />
 
     </com.google.android.material.textfield.TextInputLayout>
