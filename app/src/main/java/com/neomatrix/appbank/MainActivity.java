@@ -9,9 +9,11 @@ import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.neomatrix.appbank.adapter.StatementsAdapter;
 import com.neomatrix.appbank.model.StatementList;
-import com.neomatrix.appbank.model.Statements;
+
+import com.neomatrix.appbank.model.StatementsResponse;
 import com.neomatrix.appbank.model.UserAccount;
 import com.neomatrix.appbank.service.RetrofitService;
 
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         receiveUser();
-        responseFromApi();
+
 
     }
 
@@ -58,30 +60,36 @@ public class MainActivity extends AppCompatActivity {
         name.setText(userAccount.getName());
         account.setText(userAccount.getBankAccount() + " / " + userAccount.getAgency());
         balance.setText("R$" + userAccount.getBalance());
-
+        responseFromApi(userAccount);
     }
 
-    private void responseFromApi() {
+    private void responseFromApi(UserAccount userAccount) {
 
 
-        Call<StatementList> call = RetrofitService
+        Call<StatementsResponse> call = RetrofitService
                 .getInstance()
                 .getStatementsApi()
                 .getStatements();
-        call.enqueue(new Callback<StatementList>() {
+        call.enqueue(new Callback<StatementsResponse>() {
             @Override
-            public void onResponse(Call<StatementList> call, Response<StatementList> response) {
+            public void onResponse(Call<StatementsResponse> call, Response<StatementsResponse> response) {
                 if (!response.isSuccessful()){
-                    System.out.println("codigo de resposta"+response.code());
+                    System.out.println("codigo de resposta"+response.errorBody());
                 }
-                StatementList statements = response.body();
+
+                System.out.println("deu tudo certo"+response.body());
+                System.out.println("deu tudo certo"+response.message());
+
+                StatementsResponse lists = response.body();
+                setUpRecyclerView(lists);
 
 
-                System.out.println(response.raw());
+
+
             }
 
             @Override
-            public void onFailure(Call<StatementList> call, Throwable t) {
+            public void onFailure(Call<StatementsResponse> call, Throwable t) {
                 System.out.println("falhou em algum lugar");
                 System.out.println(t.getMessage());
                 System.out.println(t.getLocalizedMessage());
@@ -93,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void setUpRecyclerView(List<Statements> statements) {
+    private void setUpRecyclerView(StatementsResponse statements) {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);

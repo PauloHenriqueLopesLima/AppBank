@@ -1,6 +1,7 @@
 package com.neomatrix.appbank.service.api;
 
-import com.neomatrix.appbank.model.StatementList;
+import com.neomatrix.appbank.model.StatementsResponse;
+
 
 import retrofit2.Call;
 
@@ -12,7 +13,6 @@ public interface StatementsApi {
 
 
     @GET("statements/1")
-    Call<StatementList> getStatements();
-
+    Call<StatementsResponse> getStatements();
 
 }

@@ -9,18 +9,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.neomatrix.appbank.R;
-import com.neomatrix.appbank.model.Statements;
+import com.neomatrix.appbank.model.StatementList;
+import com.neomatrix.appbank.model.StatementsResponse;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StatementsAdapter extends RecyclerView.Adapter<StatementsAdapter.ViewHolder> {
 
-    private List<Statements> statementsList = new ArrayList<>();
 
+    private StatementsResponse statementsList;
 
-
-    public void atualizarStatements (List<Statements> list){
+    public void atualizarStatements (StatementsResponse list){
         this.statementsList = list;
         notifyDataSetChanged();
     }
@@ -35,15 +36,15 @@ public class StatementsAdapter extends RecyclerView.Adapter<StatementsAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Statements statements = statementsList.get(position);
-        holder.bind(statements);
+        StatementList statementList = statementsList.getStatementList().get(position);
+        holder.bind(statementList);
 
 
     }
 
     @Override
     public int getItemCount() {
-        return statementsList.size();
+        return statementsList.getStatementList().size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -63,11 +64,11 @@ public class StatementsAdapter extends RecyclerView.Adapter<StatementsAdapter.Vi
             valor = itemView.findViewById(R.id.value_textView);
         }
 
-        public void bind(Statements statements) {
-            titulo.setText(statements.getTitle());
-            data.setText((CharSequence) statements.getDate());
-            descricao.setText(statements.getDesc());
-            valor.setText((int) statements.getValue());
+        public void bind(StatementList statementList) {
+            titulo.setText(statementList.getTitle());
+            data.setText((CharSequence) statementList.getDate());
+            descricao.setText(statementList.getDesc());
+            //valor.setText( statementList.getValue());
 
         }
     }
