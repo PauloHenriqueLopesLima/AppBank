@@ -6,11 +6,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.neomatrix.appbank.adapter.StatementsAdapter;
+import com.neomatrix.appbank.model.StatementList;
 import com.neomatrix.appbank.model.Statements;
 import com.neomatrix.appbank.model.UserAccount;
 import com.neomatrix.appbank.service.RetrofitService;
@@ -38,13 +38,13 @@ public class MainActivity extends AppCompatActivity {
         name = findViewById(R.id.name_textView);
         account = findViewById(R.id.conta_textView);
         balance = findViewById(R.id.saldo_textView);
-        exit =findViewById(R.id.exit_imageButton);
+        exit = findViewById(R.id.exit_imageButton);
 
         exit.setOnClickListener(view -> finish());
 
 
-
         receiveUser();
+        responseFromApi();
 
     }
 
@@ -54,30 +54,42 @@ public class MainActivity extends AppCompatActivity {
 
         UserAccount userAccount = (UserAccount) Objects.requireNonNull(bundle).getSerializable("USER");
 
-        System.out.println(userAccount.getName());
+
         name.setText(userAccount.getName());
-        account.setText(userAccount.getBankAccount()+" / "+userAccount.getAgency());
-        balance.setText("R$"+userAccount.getBalance());
-        responseFromApi(userAccount);
+        account.setText(userAccount.getBankAccount() + " / " + userAccount.getAgency());
+        balance.setText("R$" + userAccount.getBalance());
+
     }
 
-    private void responseFromApi(UserAccount userAccount) {
-        Call<List<Statements>> call = RetrofitService.getInstance().getStatementsApi().getStatements(String.valueOf(userAccount.getUserId()));
-        call.enqueue(new Callback<List<Statements>>() {
+    private void responseFromApi() {
+
+
+        Call<StatementList> call = RetrofitService
+                .getInstance()
+                .getStatementsApi()
+                .getStatements();
+        call.enqueue(new Callback<StatementList>() {
             @Override
-            public void onResponse(Call<List<Statements>> call, Response<List<Statements>> response) {
-                List<Statements> statements = response.body();
-                if (statements != null) {
-                    setUpRecyclerView(statements);
+            public void onResponse(Call<StatementList> call, Response<StatementList> response) {
+                if (!response.isSuccessful()){
+                    System.out.println("codigo de resposta"+response.code());
                 }
+                StatementList statements = response.body();
+
+
+                System.out.println(response.raw());
             }
 
-
-
             @Override
-            public void onFailure(Call<List<Statements>> call, Throwable t) {
+            public void onFailure(Call<StatementList> call, Throwable t) {
+                System.out.println("falhou em algum lugar");
+                System.out.println(t.getMessage());
+                System.out.println(t.getLocalizedMessage());
+
             }
         });
+
+
     }
 
 
@@ -85,8 +97,8 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        adapter = new StatementsAdapter(statements);
-
+        adapter = new StatementsAdapter();
+        adapter.atualizarStatements(statements);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }

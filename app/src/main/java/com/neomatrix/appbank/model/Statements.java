@@ -1,12 +1,16 @@
 package com.neomatrix.appbank.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Statements {
 
+    private ArrayList < Statements > statementList = new ArrayList<>();
+
+
     private String title;
     private String desc;
-    private Date date;
+    private String date;
     private float value;
 
     public String getTitle() {
@@ -25,11 +29,11 @@ public class Statements {
         this.desc = desc;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

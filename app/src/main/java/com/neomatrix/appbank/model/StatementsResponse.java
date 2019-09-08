@@ -1,12 +1,13 @@
 package com.neomatrix.appbank.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StatementsResponse {
 
     private String error;
 
-    private List<Statements> results;
+    private ArrayList<Statements> results;
 
     public String getError() {
         return error;
@@ -16,11 +17,8 @@ public class StatementsResponse {
         this.error = error;
     }
 
-    public List<Statements> getResults() {
+    public ArrayList<Statements> getResults() {
         return results;
     }
 
-    public void setResults(List<Statements> results) {
-        this.results = results;
-    }
 }

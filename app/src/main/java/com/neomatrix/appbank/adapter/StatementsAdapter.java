@@ -18,9 +18,7 @@ public class StatementsAdapter extends RecyclerView.Adapter<StatementsAdapter.Vi
 
     private List<Statements> statementsList = new ArrayList<>();
 
-    public StatementsAdapter(List<Statements> statements) {
-        this.statementsList= statements;
-    }
+
 
     public void atualizarStatements (List<Statements> list){
         this.statementsList = list;
