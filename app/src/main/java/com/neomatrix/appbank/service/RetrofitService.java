@@ -1,5 +1,6 @@
 package com.neomatrix.appbank.service;
 
+import com.neomatrix.appbank.service.api.StatementsApi;
 import com.neomatrix.appbank.service.api.UserApi;
 
 import java.util.concurrent.TimeUnit;
@@ -41,5 +42,9 @@ public class RetrofitService {
 
     public UserApi getUserApi(){
         return getRetrofit().create(UserApi.class);
+    }
+
+    public StatementsApi getStatementsApi(){
+        return getRetrofit().create(StatementsApi.class);
     }
 }

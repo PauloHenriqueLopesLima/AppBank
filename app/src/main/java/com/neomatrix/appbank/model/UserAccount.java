@@ -1,6 +1,8 @@
 package com.neomatrix.appbank.model;
 
-public class UserAccount {
+import java.io.Serializable;
+
+public class UserAccount implements Serializable {
 
     private int userId;
     private String name;
