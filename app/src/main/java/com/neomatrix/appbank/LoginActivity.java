@@ -5,15 +5,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.neomatrix.appbank.model.UserAccountResponse;
+import com.neomatrix.appbank.service.RetrofitService;
 import com.neomatrix.appbank.service.api.UserApi;
+
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -66,7 +71,25 @@ public class LoginActivity extends AppCompatActivity {
 
         }
 
-        receberDados(user,password);
+        Call<UserAccountResponse> call = RetrofitService.getInstance().getUserApi().getUser(user,password);
+        call.enqueue(new Callback<UserAccountResponse>() {
+            @Override
+            public void onResponse(Call<UserAccountResponse> call, Response<UserAccountResponse> response) {
+                UserAccountResponse userAccountResponse = response.body();
+                if (userAccountResponse != null) {
+                    System.out.println("nome do usuario: "+userAccountResponse.getUserAccount().getName());
+                    System.out.println("nome agencia: "+userAccountResponse.getUserAccount().getAgency());
+                    System.out.println("saldo bancario: "+userAccountResponse.getUserAccount().getBalance());
+                    System.out.println("conta bancaria: "+userAccountResponse.getUserAccount().getBankAccount());
+                }else {}
+
+            }
+
+            @Override
+            public void onFailure(Call<UserAccountResponse> call, Throwable t) {
+
+            }
+        });
 
 
 
@@ -84,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://bank-app-test.herokuapp.com/api/")
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         UserApi service = retrofit.create(UserApi.class);
@@ -93,12 +117,17 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<UserAccountResponse> call, Response<UserAccountResponse> response) {
                 if (response.isSuccessful()) {
                     UserAccountResponse resposta = response.body();
+                    Toast.makeText(LoginActivity.this, resposta.getUserAccount()+": conta do usuario", Toast.LENGTH_SHORT).show();
                 } else {
+
+                    Toast.makeText(LoginActivity.this, "nao retornou nada", Toast.LENGTH_SHORT).show();
+
                 }
             }
 
             @Override
             public void onFailure(Call<UserAccountResponse> call, Throwable t) {
+                Toast.makeText(LoginActivity.this, "nao retornou nada"+t.getMessage()+call.toString(), Toast.LENGTH_SHORT).show();
 
             }
 

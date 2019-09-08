@@ -17,7 +17,7 @@ public interface UserApi {
 
     @FormUrlEncoded
     @Headers( {"content-type: application/x-www-form-urlencoded;charset=UTF-8", })
-    @POST("user")
+    @POST("login")
     Call<UserAccountResponse> getUser(
             @Field("user")  String user,
             @Field("password") String password);
