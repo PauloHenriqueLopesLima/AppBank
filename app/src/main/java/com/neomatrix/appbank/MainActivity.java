@@ -41,22 +41,15 @@ public class MainActivity extends AppCompatActivity {
         account = findViewById(R.id.conta_textView);
         balance = findViewById(R.id.saldo_textView);
         exit = findViewById(R.id.exit_imageButton);
-
         exit.setOnClickListener(view -> finish());
 
-
         receiveUser();
-
-
     }
 
     private void receiveUser() {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-
         UserAccount userAccount = (UserAccount) Objects.requireNonNull(bundle).getSerializable("USER");
-
-
         name.setText(userAccount.getName());
         account.setText(userAccount.getBankAccount() + " / " + userAccount.getAgency());
         balance.setText("R$" + userAccount.getBalance());
@@ -73,19 +66,11 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<StatementsResponse>() {
             @Override
             public void onResponse(Call<StatementsResponse> call, Response<StatementsResponse> response) {
-                if (!response.isSuccessful()){
-                    System.out.println("codigo de resposta"+response.errorBody());
+                if (!response.isSuccessful()) {
+                    System.out.println("codigo de resposta" + response.errorBody());
                 }
-
-                System.out.println("deu tudo certo"+response.body());
-                System.out.println("deu tudo certo"+response.message());
-
                 StatementsResponse lists = response.body();
                 setUpRecyclerView(lists);
-
-
-
-
             }
 
             @Override
@@ -93,13 +78,9 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("falhou em algum lugar");
                 System.out.println(t.getMessage());
                 System.out.println(t.getLocalizedMessage());
-
             }
         });
-
-
     }
-
 
     private void setUpRecyclerView(StatementsResponse statements) {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);

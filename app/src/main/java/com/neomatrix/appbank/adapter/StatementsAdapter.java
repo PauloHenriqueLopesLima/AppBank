@@ -66,9 +66,9 @@ public class StatementsAdapter extends RecyclerView.Adapter<StatementsAdapter.Vi
 
         public void bind(StatementList statementList) {
             titulo.setText(statementList.getTitle());
-            data.setText((CharSequence) statementList.getDate());
+            data.setText( statementList.getDate());
             descricao.setText(statementList.getDesc());
-            //valor.setText( statementList.getValue());
+            valor.setText( String.valueOf(statementList.getValue()));
 
         }
     }
