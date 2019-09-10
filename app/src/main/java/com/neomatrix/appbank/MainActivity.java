@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         Call<StatementsResponse> call = RetrofitService
                 .getInstance()
                 .getStatementsApi()
-                .getStatements();
+                .getStatements(userAccount.getUserId());
         call.enqueue(new Callback<StatementsResponse>() {
             @Override
             public void onResponse(Call<StatementsResponse> call, Response<StatementsResponse> response) {

@@ -30,10 +30,10 @@ public class LoginActivity extends AppCompatActivity {
         userLogin = findViewById(R.id.user_login);
         userPassword = findViewById(R.id.user_password);
         Button loginBtn = findViewById(R.id.login_button);
-        loginBtn.setOnClickListener(view -> validateUser());
+        loginBtn.setOnClickListener(view -> validateUserLogin());
     }
 
-    private void validateUser() {
+    private void validateUserLogin() {
 
         String user = userLogin.getEditableText().toString().trim();
         String password = userPassword.getEditableText().toString().trim();
@@ -43,11 +43,13 @@ public class LoginActivity extends AppCompatActivity {
             userLogin.requestFocus();
             return;
         }
-        // if (!Patterns.EMAIL_ADDRESS.matcher(user).matches()){
-        //     userLogin.setError("Digite um email valido");
-        //     userLogin.requestFocus();
-        //     return;
-        //  }
+
+        if (!checkString(password)){
+            userPassword.setError("A senha deve conter pelo menos, uma letra maiuscula, um numero e um caractere especial,");
+            userPassword.requestFocus();
+            return;
+        }
+
         if (password.isEmpty()) {
             userPassword.setError("Digite sua senha");
             userPassword.requestFocus();
@@ -60,12 +62,33 @@ public class LoginActivity extends AppCompatActivity {
 
         }
 
-        responseFromApi(user, password);
+        loginUserToApi(user, password);
 
 
     }
 
-    private void responseFromApi(String user, String password) {
+    private static boolean checkString(String str) {
+        char ch;
+        boolean capitalFlag = false;
+        boolean lowerCaseFlag = false;
+        boolean numberFlag = false;
+        for(int i=0;i < str.length();i++) {
+            ch = str.charAt(i);
+            if( Character.isDigit(ch)) {
+                numberFlag = true;
+            }
+            else if (Character.isUpperCase(ch)) {
+                capitalFlag = true;
+            } else if (Character.isLowerCase(ch)) {
+                lowerCaseFlag = true;
+            }
+            if(numberFlag && capitalFlag && lowerCaseFlag)
+                return true;
+        }
+        return false;
+    }
+
+    private void loginUserToApi(String user, String password) {
         Call<UserAccountResponse> call = RetrofitService.getInstance().getUserApi().getUser(user, password);
         call.enqueue(new Callback<UserAccountResponse>() {
             @Override
@@ -73,29 +96,29 @@ public class LoginActivity extends AppCompatActivity {
                 UserAccountResponse userAccountResponse = response.body();
                 if (userAccountResponse != null) {
 
-                    UserAccount userAccount = new UserAccount();
-                    userAccount.setUserId(userAccountResponse.getUserAccount().getUserId());
-                    userAccount.setName(userAccountResponse.getUserAccount().getName());
-                    userAccount.setAgency(userAccountResponse.getUserAccount().getAgency());
-                    userAccount.setBankAccount(userAccountResponse.getUserAccount().getBankAccount());
-                    userAccount.setBalance(userAccountResponse.getUserAccount().getBalance());
+                    UserAccount userAccount = getUserAccount(userAccountResponse);
 
-                    sendUserToMainActivity(userAccount);
-
-
+                    sendUserToAccountDetails(userAccount);
                 }
-
             }
 
             @Override
             public void onFailure(Call<UserAccountResponse> call, Throwable t) {
-
             }
         });
     }
 
+    private UserAccount getUserAccount(UserAccountResponse userAccountResponse) {
+        UserAccount userAccount = new UserAccount();
+        userAccount.setUserId(userAccountResponse.getUserAccount().getUserId());
+        userAccount.setName(userAccountResponse.getUserAccount().getName());
+        userAccount.setAgency(userAccountResponse.getUserAccount().getAgency());
+        userAccount.setBankAccount(userAccountResponse.getUserAccount().getBankAccount());
+        userAccount.setBalance(userAccountResponse.getUserAccount().getBalance());
+        return userAccount;
+    }
 
-    public void sendUserToMainActivity(UserAccount userAccount) {
+    public void sendUserToAccountDetails(UserAccount userAccount) {
 
         Intent intent = new Intent(this, MainActivity.class);
         Bundle bundle = new Bundle();
@@ -104,6 +127,4 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
-
 }

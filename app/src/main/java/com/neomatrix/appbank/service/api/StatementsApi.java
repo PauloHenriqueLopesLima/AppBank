@@ -7,12 +7,13 @@ import retrofit2.Call;
 
 
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 
 
 public interface StatementsApi {
 
 
-    @GET("statements/1")
-    Call<StatementsResponse> getStatements();
+    @GET("statements/{userId}")
+    Call<StatementsResponse> getStatements(@Path("userId") int userId);
 
 }
