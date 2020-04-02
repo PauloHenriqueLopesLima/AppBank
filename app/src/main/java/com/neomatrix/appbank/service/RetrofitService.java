@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitService {
 
     private Retrofit retrofit;
-    private static RetrofitService myInstance;
+    private static RetrofitService instance;
     private static final String BASE_URL = "https://bank-app-test.herokuapp.com/api/";
 
     private Retrofit getRetrofit(){
@@ -35,9 +35,9 @@ public class RetrofitService {
     }
 
     public static synchronized RetrofitService getInstance(){
-        if (myInstance==null){
-            myInstance = new RetrofitService();
-        }return myInstance;
+        if (instance==null){
+            instance = new RetrofitService();
+        }return instance;
     }
 
     public UserApi getUserApi(){

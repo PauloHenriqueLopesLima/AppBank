@@ -3,4 +3,11 @@
     <string name="login">Login</string>
     <string name="bank">Bank</string>
     <string name="todo">TODO</string>
+    <string name="digite_seu_email">Digite seu email</string>
+    <string name="erro_senha">A senha deve conter pelo menos, uma letra maiuscula, um numero e um caractere especial.</string>
+    <string name="erro_senha_vazia">Digite sua senha</string>
+    <string name="erro_senha_tamanho">sua senha deve ter pelo menos \'6\' caracteres</string>
+    <string name="login_sucessfull">Login Sucessfull.</string>
+    <string name="login_error">Login Error</string>
+    <string name="USER">USER</string>
 </resources>

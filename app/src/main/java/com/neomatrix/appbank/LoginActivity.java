@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.neomatrix.appbank.model.UserAccount;
 import com.neomatrix.appbank.model.UserAccountResponse;
@@ -20,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText userLogin;
     private TextInputEditText userPassword;
+    private MaterialButton loginBtn;
 
 
     @Override
@@ -29,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
 
         userLogin = findViewById(R.id.user_login);
         userPassword = findViewById(R.id.user_password);
-        Button loginBtn = findViewById(R.id.login_button);
+        loginBtn = findViewById(R.id.login_button);
         loginBtn.setOnClickListener(view -> validateUserLogin());
     }
 
@@ -39,24 +42,24 @@ public class LoginActivity extends AppCompatActivity {
         String password = userPassword.getEditableText().toString().trim();
 
         if (user.isEmpty()) {
-            userLogin.setError("Digite seu email");
+            userLogin.setError(getString(R.string.digite_seu_email));
             userLogin.requestFocus();
             return;
         }
 
         if (!checkString(password)){
-            userPassword.setError("A senha deve conter pelo menos, uma letra maiuscula, um numero e um caractere especial,");
+            userPassword.setError(getString(R.string.erro_senha));
             userPassword.requestFocus();
             return;
         }
 
         if (password.isEmpty()) {
-            userPassword.setError("Digite sua senha");
+            userPassword.setError(getString(R.string.erro_senha_vazia));
             userPassword.requestFocus();
             return;
         }
         if (password.length() < 6) {
-            userPassword.setError("sua senha deve ter pelo menos '6' caracteres");
+            userPassword.setError(getString(R.string.erro_senha_tamanho));
             userPassword.requestFocus();
             return;
 
@@ -95,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<UserAccountResponse> call, Response<UserAccountResponse> response) {
                 UserAccountResponse userAccountResponse = response.body();
                 if (userAccountResponse != null) {
-
+                    Toast.makeText(LoginActivity.this, R.string.login_sucessfull, Toast.LENGTH_SHORT).show();
                     UserAccount userAccount = getUserAccount(userAccountResponse);
 
                     sendUserToAccountDetails(userAccount);
@@ -104,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<UserAccountResponse> call, Throwable t) {
+                Toast.makeText(LoginActivity.this, R.string.login_error+":"+t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -121,8 +125,9 @@ public class LoginActivity extends AppCompatActivity {
     public void sendUserToAccountDetails(UserAccount userAccount) {
 
         Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("USER", userAccount);
+        bundle.putSerializable(getString(R.string.USER), userAccount);
         intent.putExtras(bundle);
         startActivity(intent);
         finish();
